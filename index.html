@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html lang="en-PH">
+<head>
+  <meta charset="utf-8">
+  <title>Generator</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    input, textarea {
+      font-family: monospace;
+      white-space: pre;
+    }
+
+    #txtOutput {
+      font-size: 0.5em;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body>
+<form>
+  <fieldset>
+    <div>
+      <div>
+        <label for="txtInput">Type your text here&hellip;</label>
+      </div>
+      <div>
+        <textarea id="txtInput" placeholder="Type your text here&hellip;"></textarea>
+      </div>
+    </div>
+
+    <div>
+      <div>
+        <label for="txtWhite">Negative (whitespace)</label>
+      </div>
+      <div>
+        <input type="text" id="txtWhite" placeholder="(e.g. ' ')" value=" ">
+        <!--<div>-->
+          <!--<label for="fileEmojiWhite">Emoji image</label>-->
+          <!--<input type="file" id="fileEmojiWhite">-->
+        <!--</div>-->
+      </div>
+    </div>
+
+    <div>
+      <div>
+        <label for="txtBlack">Positive</label>
+      </div>
+      <div>
+        <input type="text" id="txtBlack" placeholder="(e.g. '@')" value="@">
+        <!--<div>-->
+          <!--<label for="fileEmojiBlack">Emoji image</label>-->
+          <!--<input type="file" id="fileEmojiBlack">-->
+        <!--</div>-->
+      </div>
+    </div>
+
+  </fieldset>
+  <fieldset>
+    <div>
+      <label for="txtOutput">Your text goes here&hellip;</label>
+    </div>
+    <div>
+      <textarea readonly rows="100" cols="200" id="txtOutput"></textarea>
+    </div>
+  </fieldset>
+</form>
+
+<script src="index.js"></script>
+</body>
+</html>
