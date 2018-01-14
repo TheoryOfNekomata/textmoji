@@ -33,12 +33,4 @@ export default [
             name: 'textmoji',
         }
     },
-    {
-        input: 'src/lib/index.js',
-        output: {
-            file: 'docs/textmoji.js',
-            format: 'umd',
-            name: 'textmoji',
-        }
-    },
 ]
