@@ -202,6 +202,10 @@ function renderText(str, fontData, { black, white }) {
  * @date 2018-01-14
  */
 
+/**
+ * Gets the default stored fonts.
+ * @returns {Object[]} The default fonts.
+ */
 function getDefaultFonts() {
     return [
         {

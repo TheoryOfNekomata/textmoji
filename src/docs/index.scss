@@ -113,7 +113,7 @@ textarea {
     }
     > .input > .control {
       width: 100%;
-      height: 100%;
+      height: 100% !important;
       position: absolute;
       top: 0;
       left: 0;
