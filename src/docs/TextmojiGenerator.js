@@ -7,23 +7,43 @@ import renderText from '../lib/index';
  * @date 2018-01-14
  */
 
-function resetStoredFonts() {
-    let defaultStoredFonts = [
+/**
+ * Gets the default stored fonts.
+ * @returns {Object[]} The default fonts.
+ */
+function getDefaultFonts() {
+    return [
         {
             name: 'default',
             data: FONT_DEFAULT
         }
     ]
+}
+
+/**
+ * Resets the stored fonts.
+ */
+function resetStoredFonts() {
+    let defaultStoredFonts = getDefaultFonts()
 
     window.localStorage.setItem(
         'fonts',
         JSON.stringify(defaultStoredFonts)
     )
-
-    return defaultStoredFonts
 }
 
+/**
+ * Class for the textmoji generator Web interface
+ */
 class TextmojiGenerator {
+    /**
+     * Constructs a new generator form.
+     * @param {Element} input The element for  input text.
+     * @param {Element} output The element for output text.
+     * @param {Element} black The element for the input text for positive space.
+     * @param {Element} white The element for the input text for negative space.
+     * @param {Element} font The element for the font selection.
+     */
     constructor({
         input,
         output,
@@ -41,6 +61,9 @@ class TextmojiGenerator {
         this.attachEvents()
     }
 
+    /**
+     * Attach event listeners from elements.
+     */
     attachEvents() {
         let txtAreas = [this.txtInput, this.txtBlack, this.txtWhite,]
         let events = ['keydown', 'keyup']
@@ -54,7 +77,7 @@ class TextmojiGenerator {
             })
         }
 
-        this.updateFontSelection(this.ddFont, this.storedFonts)
+        this.updateFontSelection()
 
         txtAreas.forEach(txtArea => {
             events.forEach(event => {
@@ -68,6 +91,9 @@ class TextmojiGenerator {
         })
     }
 
+    /**
+     * Load stored fonts from a storage (LocalStorage).
+     */
     loadStoredFonts() {
         let storedFontsRaw = window.localStorage.getItem('fonts')
         let storedFonts = null
@@ -76,18 +102,23 @@ class TextmojiGenerator {
             try {
                 storedFonts = JSON.parse(storedFontsRaw)
             } catch(e) {
-                this.storedFonts = resetStoredFonts()
+                resetStoredFonts()
+                this.storedFonts = getDefaultFonts()
                 return
             }
         }
 
         if (!(storedFonts instanceof Array)) {
-            storedFonts = resetStoredFonts()
+            resetStoredFonts()
+            storedFonts = getDefaultFonts()
         }
 
         this.storedFonts = storedFonts
     }
 
+    /**
+     * Update the text areas for rendering.
+     */
     updateTextAreas() {
         let currentFont = this.storedFonts.filter(font => font.name === this.ddFont.value)
 
@@ -106,15 +137,18 @@ class TextmojiGenerator {
         )
     }
 
-    updateFontSelection(el, fonts) {
-        el.innerHTML = '';
+    /**
+     * Update the font selection for available fonts.
+     */
+    updateFontSelection() {
+        this.ddFont.innerHTML = '';
 
-        fonts.forEach(font => {
+        this.storedFonts.forEach(font => {
             let option = window.document.createElement('option')
 
             option.innerText = font.name
             option.setAttribute('value', font.name)
-            el.appendChild(option)
+            this.ddFont.appendChild(option)
         })
     }
 }

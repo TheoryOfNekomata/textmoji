@@ -2,7 +2,7 @@ var TextmojiGenerator = (function () {
 'use strict';
 
 /**
- * Script description.
+ * Default font.
  * @author TheoryOfNekomata
  * @date 2018-01-14
  */
@@ -105,37 +105,44 @@ var FONT_DEFAULT = {
 }
 
 /**
- * Script description.
+ * The generator source file.
  * @author TheoryOfNekomata
  * @date 2018-01-14
  */
 
+/**
+ * Renders an individual glyph.
+ * @param {String} c The character to render.
+ * @param {Object} fontData The font data containing all glyph data.
+ * @param {String} black The "positive" character, that is, the character for filled-up spaces.
+ * @param {String} white The "negative" character, that is, the character for empty spaces.
+ * @returns {Number[][]} The intermediate rendered glyph.
+ */
 function renderGlyph(c, fontData, { black, white }) {
     let glyphData = fontData.glyphs[c.charCodeAt(0)];
     let [, width, data] = glyphData;
-    let blackChar = black;
-    let whiteChar = white;
     return data.map(chunk => {
         let rendered = chunk
             .toString(2);
-
-        if (whiteChar.length < 1) {
-            if (blackChar.length < 1) {
-                blackChar = '@';
-            }
-            whiteChar = blackChar.split('').map(() => ' ').join('');
-        }
 
         while (rendered.length < width) {
             rendered = `0${ rendered }`;
         }
 
         return rendered
-            .replace(/0/g, whiteChar)
-            .replace(/1/g, blackChar)
+            .replace(/0/g, black)
+            .replace(/1/g, white)
     })
 }
 
+/**
+ * Renders a single line of text.
+ * @param {String} line The line of text to render.
+ * @param {Object} fontData The font data containing all glyph data.
+ * @param {String} black The "positive" character, that is, the character for filled-up spaces.
+ * @param {String} white The "negative" character, that is, the character for empty spaces.
+ * @returns {String} The rendered line of text.
+ */
 function renderLine(line, fontData, { black, white }) {
     let cs = line.split('');
     let renderedGlyphs = cs.map(c => renderGlyph(c, fontData, { black, white }));
@@ -156,10 +163,28 @@ function renderLine(line, fontData, { black, white }) {
     return rendered.join('\n')
 }
 
+/**
+ * Renders a string.
+ * @param {String} str The string to render.
+ * @param {Object} fontData The font data containing all glyph data.
+ * @param {String} black The "positive" character, that is, the character for filled-up spaces.
+ * @param {String} white The "negative" character, that is, the character for empty spaces.
+ * @returns {String} The corresponding rendered string.
+ */
 function renderText(str, fontData, { black, white }) {
+    let whiteChar = white;
+    let blackChar = black;
+
+    if (whiteChar.length < 1) {
+        if (blackChar.length < 1) {
+            blackChar = '@';
+        }
+        whiteChar = blackChar.split('').map(() => ' ').join('');
+    }
+
     return str
         .split('\n')
-        .map(line => renderLine(line, fontData, { black, white }))
+        .map(line => renderLine(line, fontData, { black: blackChar, white: whiteChar }))
         .join('\n\n')
 }
 
@@ -169,23 +194,43 @@ function renderText(str, fontData, { black, white }) {
  * @date 2018-01-14
  */
 
-function resetStoredFonts() {
-    let defaultStoredFonts = [
+/**
+ * Gets the default stored fonts.
+ * @returns {Object[]} The default fonts.
+ */
+function getDefaultFonts() {
+    return [
         {
             name: 'default',
             data: FONT_DEFAULT
         }
-    ];
+    ]
+}
+
+/**
+ * Resets the stored fonts.
+ */
+function resetStoredFonts() {
+    let defaultStoredFonts = getDefaultFonts();
 
     window.localStorage.setItem(
         'fonts',
         JSON.stringify(defaultStoredFonts)
     );
-
-    return defaultStoredFonts
 }
 
+/**
+ * Class for the textmoji generator Web interface
+ */
 class TextmojiGenerator {
+    /**
+     * Constructs a new generator form.
+     * @param {Element} input The element for  input text.
+     * @param {Element} output The element for output text.
+     * @param {Element} black The element for the input text for positive space.
+     * @param {Element} white The element for the input text for negative space.
+     * @param {Element} font The element for the font selection.
+     */
     constructor({
         input,
         output,
@@ -203,6 +248,9 @@ class TextmojiGenerator {
         this.attachEvents();
     }
 
+    /**
+     * Attach event listeners from elements.
+     */
     attachEvents() {
         let txtAreas = [this.txtInput, this.txtBlack, this.txtWhite,];
         let events = ['keydown', 'keyup'];
@@ -216,7 +264,7 @@ class TextmojiGenerator {
             });
         };
 
-        this.updateFontSelection(this.ddFont, this.storedFonts);
+        this.updateFontSelection();
 
         txtAreas.forEach(txtArea => {
             events.forEach(event => {
@@ -230,6 +278,9 @@ class TextmojiGenerator {
         });
     }
 
+    /**
+     * Load stored fonts from a storage (LocalStorage).
+     */
     loadStoredFonts() {
         let storedFontsRaw = window.localStorage.getItem('fonts');
         let storedFonts = null;
@@ -238,18 +289,23 @@ class TextmojiGenerator {
             try {
                 storedFonts = JSON.parse(storedFontsRaw);
             } catch(e) {
-                this.storedFonts = resetStoredFonts();
+                resetStoredFonts();
+                this.storedFonts = getDefaultFonts();
                 return
             }
         }
 
         if (!(storedFonts instanceof Array)) {
-            storedFonts = resetStoredFonts();
+            resetStoredFonts();
+            storedFonts = getDefaultFonts();
         }
 
         this.storedFonts = storedFonts;
     }
 
+    /**
+     * Update the text areas for rendering.
+     */
     updateTextAreas() {
         let currentFont = this.storedFonts.filter(font => font.name === this.ddFont.value);
 
@@ -268,15 +324,18 @@ class TextmojiGenerator {
         );
     }
 
-    updateFontSelection(el, fonts) {
-        el.innerHTML = '';
+    /**
+     * Update the font selection for available fonts.
+     */
+    updateFontSelection() {
+        this.ddFont.innerHTML = '';
 
-        fonts.forEach(font => {
+        this.storedFonts.forEach(font => {
             let option = window.document.createElement('option');
 
             option.innerText = font.name;
             option.setAttribute('value', font.name);
-            el.appendChild(option);
+            this.ddFont.appendChild(option);
         });
     }
 }

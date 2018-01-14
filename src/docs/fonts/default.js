@@ -1,5 +1,5 @@
 /**
- * Script description.
+ * Default font.
  * @author TheoryOfNekomata
  * @date 2018-01-14
  */
