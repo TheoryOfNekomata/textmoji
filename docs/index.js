@@ -1,4 +1,4 @@
-var TextmojiGenerator = (function () {
+(function () {
 'use strict';
 
 /**
@@ -130,8 +130,8 @@ function renderGlyph(c, fontData, { black, white }) {
         }
 
         return rendered
-            .replace(/0/g, black)
-            .replace(/1/g, white)
+            .replace(/0/g, white)
+            .replace(/1/g, black)
     })
 }
 
@@ -160,7 +160,13 @@ function renderLine(line, fontData, { black, white }) {
         );
     }
 
-    return rendered.join('\n')
+    rendered = rendered.join('\n');
+
+    if (rendered.trim().length < 1) {
+        return ''
+    }
+
+    return rendered
 }
 
 /**
@@ -174,6 +180,7 @@ function renderLine(line, fontData, { black, white }) {
 function renderText(str, fontData, { black, white }) {
     let whiteChar = white;
     let blackChar = black;
+    let rendered;
 
     if (whiteChar.length < 1) {
         if (blackChar.length < 1) {
@@ -182,22 +189,19 @@ function renderText(str, fontData, { black, white }) {
         whiteChar = blackChar.split('').map(() => ' ').join('');
     }
 
-    return str
+    rendered = str
         .split('\n')
-        .map(line => renderLine(line, fontData, { black: blackChar, white: whiteChar }))
-        .join('\n\n')
+        .map(line => renderLine(line, fontData, { black: blackChar, white: whiteChar }));
+
+    return rendered.join('\n\n')
 }
 
 /**
- * Script description.
+ * The generator.
  * @author TheoryOfNekomata
  * @date 2018-01-14
  */
 
-/**
- * Gets the default stored fonts.
- * @returns {Object[]} The default fonts.
- */
 function getDefaultFonts() {
     return [
         {
@@ -230,19 +234,22 @@ class TextmojiGenerator {
      * @param {Element} black The element for the input text for positive space.
      * @param {Element} white The element for the input text for negative space.
      * @param {Element} font The element for the font selection.
+     * @param {Element} chars The element for the output text character count.
      */
     constructor({
-        input,
-        output,
-        black,
-        white,
-        font
-    }) {
+                    input,
+                    output,
+                    black,
+                    white,
+                    font,
+                    chars,
+                }) {
         this.txtInput = input;
         this.txtOutput = output;
         this.txtBlack = black;
         this.txtWhite = white;
         this.ddFont = font;
+        this.lblChars = chars;
 
         this.loadStoredFonts();
         this.attachEvents();
@@ -308,13 +315,15 @@ class TextmojiGenerator {
      */
     updateTextAreas() {
         let currentFont = this.storedFonts.filter(font => font.name === this.ddFont.value);
+        let output;
 
         if (currentFont < 1) {
             this.txtOutput.value = '';
+            this.lblChars.innerText = 0;
             return
         }
 
-        this.txtOutput.value = renderText(
+        output = renderText(
             this.txtInput.value,
             currentFont[0].data,
             {
@@ -322,6 +331,9 @@ class TextmojiGenerator {
                 white: this.txtWhite.value,
             },
         );
+
+        this.txtOutput.value = output;
+        this.lblChars.innerText = output.length;
     }
 
     /**
@@ -340,6 +352,19 @@ class TextmojiGenerator {
     }
 }
 
-return TextmojiGenerator;
+/**
+ * The script for the generator file.
+ * @author TheoryOfNekomata
+ * @date 2018-01-14
+ */
+
+new TextmojiGenerator({
+    input: window.document.getElementById('txtInput'),
+    output: window.document.getElementById('txtOutput'),
+    black: window.document.getElementById('txtBlack'),
+    white: window.document.getElementById('txtWhite'),
+    font: window.document.getElementById('ddFont'),
+    chars: window.document.getElementById('lblChars')
+});
 
 }());

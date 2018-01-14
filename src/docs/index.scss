@@ -1,0 +1,131 @@
+////
+/// @author TheoryOfNekomata
+////
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+@media (orientation: landscape) {
+  textarea {
+    resize: none;
+  }
+}
+
+@media (orientation: landscape) {
+  .textmoji-generator {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    > .cell {
+      flex: auto;
+      width: 0;
+      height: 100%;
+      position: relative;
+    }
+  }
+}
+
+.form-fieldset {
+  padding: 0;
+  border: none;
+  margin: 0;
+  > .legend {
+    padding: 1em 1em 0;
+    font-size: 2em;
+  }
+  > .contents > .container {
+    padding: 2em;
+  }
+}
+
+@media (orientation: landscape) {
+  .form-fieldset {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    > .contents {
+      flex: auto;
+      position: relative;
+    }
+    > .contents > .container {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+}
+
+
+@media (orientation: landscape) {
+  .form-collection {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    &.-vertical {
+      flex-direction: column;
+    }
+  }
+}
+
+.form-group {
+  > .input > .control {
+    display: block;
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+  }
+  &.-select-all > .input > .control {
+    user-select: all;
+  }
+  > .feedback {
+    text-align: right;
+  }
+}
+
+@media (orientation: landscape) {
+  .form-group {
+    &.-fill {
+      flex: auto;
+    }
+    display: flex;
+    flex-direction: column;
+    > .input {
+      flex: auto;
+      position: relative;
+      min-height: 2em;
+    }
+    > .input > .control {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    > .children {
+      position: relative;
+    }
+    &.-vertical + .form-group {
+      margin-top: 1em;
+    }
+    &.-horizontal + .form-group {
+      margin-left: 1em;
+    }
+  }
+}

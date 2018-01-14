@@ -5,6 +5,7 @@
   "main": "dist/textmoji.js",
   "scripts": {
     "build": "rollup -c",
+    "build:watch": "rollup -c -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,5 +22,10 @@
   "bugs": {
     "url": "https://github.com/Temoto-kun/textmoji/issues"
   },
-  "homepage": "https://github.com/Temoto-kun/textmoji#readme"
+  "homepage": "https://github.com/Temoto-kun/textmoji#readme",
+  "devDependencies": {
+    "autoprefixer": "^7.2.5",
+    "postcss": "^6.0.16",
+    "rollup-plugin-scss": "^0.4.0"
+  }
 }

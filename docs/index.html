@@ -2,8 +2,10 @@
 <html lang="en-PH">
 <head>
   <meta charset="utf-8">
-  <title>Generator</title>
+  <title>Textmoji Generator</title>
+  <meta name="description" content="Convert input text into emoji arranged to read like input text.">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="index.css">
   <style>
     input, textarea {
       font-family: monospace;
@@ -18,72 +20,86 @@
 </head>
 <body>
 <form>
-  <fieldset>
-    <div>
-      <div>
-        <label for="txtInput">Type your text here&hellip;</label>
-      </div>
-      <div>
-        <textarea id="txtInput" placeholder="Type your text here&hellip;"></textarea>
-      </div>
-    </div>
+  <div class="textmoji-generator">
+    <div class="cell">
+      <div class="form-fieldset">
+        <div class="legend">Input</div>
+        <div class="contents">
+          <div class="container">
+            <div class="form-collection -vertical">
+              <div class="form-group -vertical -fill">
+                <div class="label">
+                  <label class="text" for="txtInput">Type your text here&hellip;</label>
+                </div>
+                <div class="input">
+                  <textarea class="control" id="txtInput" placeholder="Type your text here&hellip;"></textarea>
+                </div>
+              </div>
+              <div class="form-group -vertical">
+                <div class="input">
+                  <div class="form-collection">
+                    <div class="form-group -fill -horizontal">
+                      <div class="label">
+                        <label class="text" for="txtWhite">Negative (whitespace)</label>
+                      </div>
+                      <div class="input">
+                        <input class="control" type="text" id="txtWhite" placeholder="(e.g. ' ')" value=" ">
+                      </div>
+                    </div>
+                    <div class="form-group -fill -horizontal">
+                      <div class="label">
+                        <label class="text" for="txtBlack">Positive</label>
+                      </div>
+                      <div class="input">
+                        <input class="control" type="text" id="txtBlack" placeholder="(e.g. '@')" value="@">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-    <div>
-      <div>
-        <label for="txtWhite">Negative (whitespace)</label>
-      </div>
-      <div>
-        <input type="text" id="txtWhite" placeholder="(e.g. ' ')" value=" ">
-        <!--<div>-->
-          <!--<label for="fileEmojiWhite">Emoji image</label>-->
-          <!--<input type="file" id="fileEmojiWhite">-->
-        <!--</div>-->
-      </div>
-    </div>
-
-    <div>
-      <div>
-        <label for="txtBlack">Positive</label>
-      </div>
-      <div>
-        <input type="text" id="txtBlack" placeholder="(e.g. '@')" value="@">
-        <!--<div>-->
-          <!--<label for="fileEmojiBlack">Emoji image</label>-->
-          <!--<input type="file" id="fileEmojiBlack">-->
-        <!--</div>-->
+              <div class="form-group -vertical">
+                <div class="label">
+                  <label class="text" for="ddFont">Font</label>
+                </div>
+                <div class="input">
+                  <select class="control" id="ddFont"></select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-
-    <div>
-      <div>
-        <label for="ddFont">Font</label>
+    <div class="cell">
+      <div class="form-fieldset">
+        <div class="legend">Output</div>
+        <div class="contents">
+          <div class="container">
+            <div class="form-collection -vertical">
+              <div class="form-group -veritical -fill -select-all">
+                <div class="label">
+                  <label class="text" for="txtOutput">Your text goes here&hellip;</label>
+                </div>
+                <div class="input">
+                  <textarea class="control" readonly id="txtOutput"></textarea>
+                </div>
+                <div class="feedback">
+                  <label>Characters</label>: <output id="lblChars">0</output>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
-        <select id="ddFont"></select>
-      </div>
     </div>
-
-  </fieldset>
-  <fieldset>
-    <div>
-      <label for="txtOutput">Your text goes here&hellip;</label>
-    </div>
-    <div>
-      <textarea readonly rows="100" cols="200" id="txtOutput"></textarea>
-    </div>
-  </fieldset>
+  </div>
 </form>
 
 <script src="textmoji.js"></script>
-<script src="TextmojiGenerator.js"></script>
+<script src="index.js"></script>
 <script>
-    new window.TextmojiGenerator({
-        input: window.document.getElementById('txtInput'),
-        output: window.document.getElementById('txtOutput'),
-        black: window.document.getElementById('txtBlack'),
-        white: window.document.getElementById('txtWhite'),
-        font: window.document.getElementById('ddFont')
-    })
+
 </script>
 </body>
 </html>

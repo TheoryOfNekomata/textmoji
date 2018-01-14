@@ -1,11 +1,11 @@
-import FONT_DEFAULT from './fonts/default';
-import renderText from '../lib/index';
-
 /**
- * Script description.
+ * The generator.
  * @author TheoryOfNekomata
  * @date 2018-01-14
  */
+
+import FONT_DEFAULT from './fonts/default';
+import renderText from '../lib/index';
 
 /**
  * Gets the default stored fonts.
@@ -43,19 +43,22 @@ class TextmojiGenerator {
      * @param {Element} black The element for the input text for positive space.
      * @param {Element} white The element for the input text for negative space.
      * @param {Element} font The element for the font selection.
+     * @param {Element} chars The element for the output text character count.
      */
     constructor({
-        input,
-        output,
-        black,
-        white,
-        font
-    }) {
+                    input,
+                    output,
+                    black,
+                    white,
+                    font,
+                    chars,
+                }) {
         this.txtInput = input
         this.txtOutput = output
         this.txtBlack = black
         this.txtWhite = white
         this.ddFont = font
+        this.lblChars = chars
 
         this.loadStoredFonts()
         this.attachEvents()
@@ -121,13 +124,15 @@ class TextmojiGenerator {
      */
     updateTextAreas() {
         let currentFont = this.storedFonts.filter(font => font.name === this.ddFont.value)
+        let output
 
         if (currentFont < 1) {
             this.txtOutput.value = ''
+            this.lblChars.innerText = 0
             return
         }
 
-        this.txtOutput.value = renderText(
+        output = renderText(
             this.txtInput.value,
             currentFont[0].data,
             {
@@ -135,6 +140,9 @@ class TextmojiGenerator {
                 white: this.txtWhite.value,
             },
         )
+
+        this.txtOutput.value = output
+        this.lblChars.innerText = output.length
     }
 
     /**

@@ -24,8 +24,8 @@ function renderGlyph(c, fontData, { black, white }) {
         }
 
         return rendered
-            .replace(/0/g, black)
-            .replace(/1/g, white)
+            .replace(/0/g, white)
+            .replace(/1/g, black)
     })
 }
 
@@ -54,7 +54,13 @@ function renderLine(line, fontData, { black, white }) {
         )
     }
 
-    return rendered.join('\n')
+    rendered = rendered.join('\n')
+
+    if (rendered.trim().length < 1) {
+        return ''
+    }
+
+    return rendered
 }
 
 /**
@@ -68,6 +74,7 @@ function renderLine(line, fontData, { black, white }) {
 function renderText(str, fontData, { black, white }) {
     let whiteChar = white
     let blackChar = black
+    let rendered
 
     if (whiteChar.length < 1) {
         if (blackChar.length < 1) {
@@ -76,10 +83,11 @@ function renderText(str, fontData, { black, white }) {
         whiteChar = blackChar.split('').map(() => ' ').join('')
     }
 
-    return str
+    rendered = str
         .split('\n')
         .map(line => renderLine(line, fontData, { black: blackChar, white: whiteChar }))
-        .join('\n\n')
+
+    return rendered.join('\n\n')
 }
 
 export default renderText
