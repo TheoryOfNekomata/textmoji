@@ -54,6 +54,15 @@
       </div>
     </div>
 
+    <div>
+      <div>
+        <label for="ddFont">Font</label>
+      </div>
+      <div>
+        <select id="ddFont"></select>
+      </div>
+    </div>
+
   </fieldset>
   <fieldset>
     <div>
@@ -65,6 +74,16 @@
   </fieldset>
 </form>
 
-<script src="index.js"></script>
+<script src="textmoji.js"></script>
+<script src="TextmojiGenerator.js"></script>
+<script>
+    new window.TextmojiGenerator({
+        input: window.document.getElementById('txtInput'),
+        output: window.document.getElementById('txtOutput'),
+        black: window.document.getElementById('txtBlack'),
+        white: window.document.getElementById('txtWhite'),
+        font: window.document.getElementById('ddFont')
+    })
+</script>
 </body>
 </html>

@@ -1,4 +1,10 @@
-const FONT_DEFAULT = {
+/**
+ * Script description.
+ * @author TheoryOfNekomata
+ * @date 2018-01-14
+ */
+
+export default {
     height: 8,
     glyphs: [
         null,
@@ -94,103 +100,3 @@ const FONT_DEFAULT = {
         [0, 5, [0b00000, 0b11111, 0b00010, 0b00100, 0b01000, 0b11111, 0b00000, 0b00000]],
     ]
 }
-
-let currentFont = FONT_DEFAULT
-
-function renderGlyph(c, font, { black, white }) {
-    let glyphData = font.glyphs[c.charCodeAt(0)]
-    let [, width, data] = glyphData
-    return data.map(chunk => {
-        let rendered = chunk
-            .toString(2)
-
-        if (white.length > 0) {
-            while (rendered.length < width) {
-                rendered = `0${ rendered }`
-            }
-        }
-
-        return rendered
-            .replace(/0/g, white)
-            .replace(/1/g, black)
-    })
-}
-
-function renderLine(line, font, { black, white }) {
-    let cs = line.split('')
-    let renderedGlyphs = cs.map(c => renderGlyph(c, font, { black, white }))
-    let rendered = []
-
-    for (let i = 0; i < font.height; i += 1) {
-        rendered.push(
-            renderedGlyphs
-                .reduce(
-                    (chunk, glyph) => chunk.length < 1 ?
-                        glyph[i] :
-                        `${ chunk }${ white }${ glyph[i] }`,
-                    ''
-                )
-        )
-    }
-
-    return rendered.join('\n')
-}
-
-function transformText(str, font, { black, white }) {
-    return str
-        .split('\n')
-        .map(line => renderLine(line, font, { black, white }))
-        .join('\n\n')
-}
-
-function updateTextAreas({
-                             input: txtInput,
-                             output: txtOutput,
-                             black: txtBlack,
-                             white: txtWhite,
-                         }) {
-    txtOutput.value = transformText(
-        txtInput.value,
-        currentFont,
-        {
-            black: txtBlack.value,
-            white: txtWhite.value,
-        },
-    )
-}
-
-function attachEvents({
-                          input: txtInput,
-                          output: txtOutput,
-                          black: txtBlack,
-                          white: txtWhite,
-                      }) {
-    let txtAreas = [txtInput, txtBlack, txtWhite]
-    let events = ['keydown', 'keyup']
-    let eventHandler = () => {
-        updateTextAreas({
-            input: txtInput,
-            output: txtOutput,
-            black: txtBlack,
-            white: txtWhite,
-        })
-    }
-
-    txtAreas.forEach(txtArea => {
-        events.forEach(event => {
-            txtArea.addEventListener(event, eventHandler)
-        })
-    })
-}
-
-let txtInput = window.document.getElementById('txtInput')
-let txtOutput = window.document.getElementById('txtOutput')
-let txtBlack = window.document.getElementById('txtBlack')
-let txtWhite = window.document.getElementById('txtWhite')
-
-attachEvents({
-    input: txtInput,
-    output: txtOutput,
-    black: txtBlack,
-    white: txtWhite,
-})

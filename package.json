@@ -1,0 +1,25 @@
+{
+  "name": "@theoryofnekomata/textmoji",
+  "version": "0.1.0",
+  "description": "Convert input text into emoji arranged to read like input text.",
+  "main": "dist/textmoji.js",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Temoto-kun/textmoji.git"
+  },
+  "keywords": [
+    "Emoji",
+    "text",
+    "generator"
+  ],
+  "author": "TheoryOfNekomata <allan.crisostomo@outlook.com> (https://temoto-kun.github.io/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Temoto-kun/textmoji/issues"
+  },
+  "homepage": "https://github.com/Temoto-kun/textmoji#readme"
+}
